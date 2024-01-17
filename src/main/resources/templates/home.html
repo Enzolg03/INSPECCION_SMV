@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="~{layout::head}">
+
+</head>
+<body>
+<nav th:replace="~{layout::menu}" ></nav>
+<h1>Bienvenido, <span th:text="${username}"></span>!</h1>
+<h2>Tu rol es: <span th:text="${rol[0]}"></span></h2>
+</body>
+</html>

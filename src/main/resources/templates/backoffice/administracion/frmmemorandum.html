@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="~{layout::head}">
+</head>
+<body>
+<script th:src="@{/scripts/web/administracion/frmmemorandum.js}"
+        type="text/javascript"></script>
+<nav th:replace="~{layout::menu}" ></nav>
+<div class="card">
+    <div class="card-header">
+        Lista de Memorandun
+    </div>
+    <div class="card-body">
+        <button id="btnnuevo" type="button" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Nuevo
+        </button>
+        <table id="tblmemorandum" class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Destinatario</th>
+                <th scope="col">Emisor</th>
+                <th scope="col">Asunto</th>
+                <th scope="col">Referencia</th>
+                <th scope="col">Fecha</th>
+                <th>Actualizar</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="memorandum: ${listamemorandum}">
+                <td th:text="${memorandum.id_memorandum}"></td>
+                <td th:text="${memorandum.tipoMemorandun.descripcion}"></td>
+                <td th:text="${memorandum.destinatario}"></td>
+                <td th:text="${memorandum.emisor}"></td>
+                <td th:text="${memorandum.asunto}"></td>
+                <td th:text="${memorandum.referencia}"></td>
+                <td th:text="${memorandum.fecha}"></td>
+                <td >
+                    <button type="button" class="btn btn-info btnactualizar"
+                            th:data-idmemorandum="${memorandum.id_memorandum}"
+                            th:data-idtipomemorandum="${memorandum.tipoMemorandun.id_tipomemorandum}"
+                            th:data-destinatario="${memorandum.destinatario}"
+                            th:data-emisor="${memorandum.emisor}"
+                            th:data-asunto="${memorandum.asunto}"
+                            th:data-referencia="${memorandum.referencia}"
+                            th:data-fecha="${memorandum.fecha}">
+
+                        <i class="bi bi-pencil-square"></i>
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="modalMemorandum" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="memorandum_form" class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Mantenimiento Memorandum</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="cbotipo" class="form-label">Tipo Memorandum:</label>
+                    <select id="cbotipo" class="form-select" name="cbotipo"
+                            aria-label="Default select example">
+                        <option selected>Open this select menu</option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                    </select>
+                    <label for="txtdestinatario" class="form-label">Destinatario:</label>
+                    <input type="text" class="form-control" id="txtdestinatario" name="txtdestinatario"
+                           placeholder="Ingrese destinatario">
+                    <label for="txtemisor" class="form-label">Emisor:</label>
+                    <input type="text" class="form-control" id="txtemisor" name="txtemisor"
+                           placeholder="Ingrese Emisor">
+                    <label for="txtasunto" class="form-label">Asunto:</label>
+                    <input type="text" class="form-control" id="txtasunto" name="txtasunto"
+                           placeholder="Ingrese asunto">
+                    <label for="txtreferencia" class="form-label">Referencia:</label>
+                    <input type="text" class="form-control" id="txtreferencia" name="txtreferencia"
+                           placeholder="Ingrese referencia">
+                    <label for="txtfecha" class="form-label">Fecha:</label>
+                    <input type="text" class="form-control" id="txtfecha" name="txtfecha"
+                           placeholder="Ingrese referencia">
+                    <input type="hidden" id="hddidmemorandum" value="0">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle"></i> Cerrar</button>
+                <button id="btnguardar" type="button" class="btn btn-primary">
+                    <i class="bi bi-cloud-download-fill"></i> Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script th:src="@{/scripts/lib/notiflix-aio-3.2.6.min.js}"></script>
+<script th:src="@{/scripts/jquery/jquery.validate.min.js}"></script>
+<script>
+    $("#memorandum_form").validate({
+        rules: {
+            cbotipo: {
+                required: true
+            },
+            txtdestinatario: {
+                required: true,
+                minlength: 2
+            },
+            txtemisor: {
+                required: true,
+                minlength: 2
+            },
+            txtasunto: {
+                required: true,
+                minlength: 2
+            },
+            txtreferencia: {
+                required: true,
+                minlength: 2
+            },
+            txtfecha: {
+                required: true,
+                date: true
+            }
+        },
+        messages: {
+            cbotipo: {
+                required: "Por favor, selecciona un tipo de memorandum"
+            },
+            txtdestinatario: {
+                required: "Por favor, introduce un destinatario",
+                minlength: "El destinatario debe tener al menos 2 caracteres"
+            },
+            txtemisor: {
+                required: "Por favor, introduce un emisor",
+                minlength: "El emisor debe tener al menos 2 caracteres"
+            },
+            txtasunto: {
+                required: "Por favor, introduce un asunto",
+                minlength: "El asunto debe tener al menos 2 caracteres"
+            },
+            txtreferencia: {
+                required: "Por favor, introduce una referencia",
+                minlength: "La referencia debe tener al menos 2 caracteres"
+            },
+            txtfecha: {
+                required: "Por favor, introduce una fecha",
+                date: "Por favor, introduce una fecha válida YYYY-MM-DD"
+            }
+        }
+    });
+
+</script>
+</body>
+</html>
